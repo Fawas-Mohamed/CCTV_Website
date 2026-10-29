@@ -1,0 +1,26 @@
+{
+  "name": "cctv-security-solutions",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.6.2",
+    "framer-motion": "^12.43.0",
+    "lenis": "^1.3.27",
+    "lucide-react": "^1.64.0",
+    "postcss": "^8.5.32",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^3.4.19",
+    "three": "^0.186.1",
+    "vite": "^6.3.5"
+  }
+}
