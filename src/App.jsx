@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import { useReducedMotion } from 'framer-motion';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import IntroCover from './components/IntroCover.jsx';
 import { Categories, Footer, Reviews, Seam, Services } from './components/Sections.jsx';
 import { CartProvider } from './context/CartContext.jsx';
 
@@ -67,17 +68,18 @@ function Shop() {
     <MotionSystems />
     <div className="atmosphere" aria-hidden="true"><i /><i /><i /></div>
     <Header />
+    <IntroCover />
     <main>
       <Hero />
-      <Seam from="#05070b" to="#030813" beam="48%" />
+      <Seam from="#05070b" to="#1C2227" beam="48%" />
       <Categories onChoose={chooseCategory} />
-      <Seam from="#030813" to="#071427" beam="30%" />
+      <Seam from="#1C2227" to="#171B20" beam="30%" />
       <ProductsLoader filter={filter} setFilter={setFilter} />
-      <Seam from="#071427" to="#040a14" beam="66%" />
+      <Seam from="#121417" to="#E7E7E7" beam="66%" />
       <Services />
-      <Seam from="#040a14" to="#071427" beam="42%" />
+      <Seam from="#E7E7E7" to="#1C2227" beam="42%" />
       <Reviews />
-      <Seam from="#071427" to="#030813" beam="none" />
+      <Seam from="#1C2227" to="#121417" beam="none" />
       <Footer />
     </main>
   </CartProvider>;

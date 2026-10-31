@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
-import { Menu, ShoppingCart, UserRound, X, ArrowRight, Minus, Plus, Trash2, Shield } from 'lucide-react';
+import { Menu, ShoppingCart, X, ArrowRight, Minus, Plus, Trash2, Globe, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext.jsx';
 import { products } from '../data/shop.js';
 
@@ -52,8 +52,8 @@ export default function Header() {
   const { count } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('#home');
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -63,27 +63,50 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    const targets = ['home', 'categories', 'services', 'reviews', 'contact', 'products']
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (!targets.length) return undefined;
+    const observer = new IntersectionObserver(() => {
+      const cutoff = window.innerHeight * 0.4;
+      const current = targets
+        .map((target) => ({ id: target.id, rect: target.getBoundingClientRect() }))
+        .filter(({ rect }) => rect.top < cutoff && rect.bottom > 64)
+        .sort((a, b) => b.rect.top - a.rect.top)[0];
+      setActiveSection(current?.id === 'products' ? null : '#' + (current?.id || 'home'));
+    }, { rootMargin: '-64px 0px -60% 0px' });
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!menuOpen) return;
     const onKey = (event) => { if (event.key === 'Escape') setMenuOpen(false); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  const links = [['HOME', '#home'], ['CAMERAS', '#categories'], ['BUSINESS', '#services'], ['PRODUCTS', '#products'], ['SERVICES', '#services'], ['REVIEWS', '#reviews']];
+  const links = [['Home', '#home'], ['About', '#categories'], ['Services', '#services'], ['FAQ', '#reviews'], ['Contact Us', '#contact']];
   return <>
     <header className={'shop-header' + (scrolled ? ' is-scrolled' : '')}>
-      <a className="wordmark" href="#home"><span className="brand-lens"><i /></span><span>SECUREVIEW</span></a>
+      <a className="wordmark" href="#home" aria-label="SecureView home">
+        <svg className="brand-shield" viewBox="0 0 32 36" aria-hidden="true">
+          <path d="M16 1 30 7v10c0 8-5.3 14-14 18C7.3 31 2 25 2 17V7l14-6Z" />
+          <circle cx="16" cy="17" r="6" />
+        </svg>
+        <span>Secure<span className="wordmark-view">View</span></span>
+      </a>
       <nav className={'primary-nav' + (menuOpen ? ' is-open' : '')} aria-label="Main navigation" ref={menuRef}>
-        <div className="mobile-nav-top"><span>MENU</span><button className="icon-button" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button></div>
-        {links.map(([label, href]) => <a key={label + href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
-        <button className="mobile-nav-account" onClick={() => { setMenuOpen(false); setAccountOpen(true); }}><UserRound size={17} /> Account</button>
+        <div className="mobile-nav-top"><a className="mobile-nav-brand" href="#home" onClick={() => setMenuOpen(false)}>Secure<span>View</span></a><button className="icon-button" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button></div>
+        {links.map(([label, href]) => <a key={label} className={activeSection === href ? 'is-active' : ''} href={href} aria-current={activeSection === href ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        <a className="mobile-join" href="#products" onClick={() => setMenuOpen(false)}>Join Now <ArrowRight size={16} /></a>
       </nav>
       <div className="header-actions">
-        <button className="icon-button account-button" onClick={() => setAccountOpen((value) => !value)} aria-label="Account" aria-expanded={accountOpen}><UserRound /></button>
-        <button className="icon-button cart-button" onClick={() => setCartOpen(true)} aria-label={'Open cart, ' + count + ' items'}><ShoppingCart /><span className="cart-count">{count}</span></button>
+        <span className="header-language" aria-label="Language: English"><Globe /><span>EN</span><ChevronDown size={13} /></span>
+        <button className="icon-button cart-button" onClick={() => setCartOpen(true)} aria-label={'Open cart, ' + count + ' items'}><ShoppingCart /><span key={count} className="cart-count">{count}</span></button>
+        <a className="header-join" href="#products">Join Now <ArrowRight size={16} /></a>
         <button className="icon-button menu-button" onClick={() => setMenuOpen(true)} aria-label="Open menu"><Menu /></button>
       </div>
-      {accountOpen && <div className="account-popover"><strong>Welcome to SecureView</strong><span>Account tools are coming soon.</span><button onClick={() => setAccountOpen(false)}>Got it</button></div>}
     </header>
     <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
   </>;

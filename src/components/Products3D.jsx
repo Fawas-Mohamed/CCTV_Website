@@ -154,11 +154,11 @@ export function Products3D({ filter, setFilter }) {
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp} style={{ touchAction: 'pan-y' }}>
       <Canvas frameloop={!inView ? "never" : reduce ? "demand" : "always"} dpr={[1, 2]} camera={{ position: [0, 1.05, 9], fov: 38 }} gl={{ antialias: true, alpha: true }}>
-        <color attach="background" args={['#071427']} />
-        <fog attach="fog" args={['#071427', 10, 24]} />
+        <color attach="background" args={['#1c2227']} />
+        <fog attach="fog" args={['#1c2227', 10, 24]} />
         <ambientLight intensity={1.1} />
-        <directionalLight position={[2, 5, 5]} intensity={2.2} color="#8cc8ff" />
-        <pointLight position={[-3, 1, 2]} intensity={0.9} color="#4da3ff" />
+        <directionalLight position={[2, 5, 5]} intensity={2.2} color="#F3FFE0" />
+        <pointLight position={[-3, 1, 2]} intensity={0.35} color="#B4FF00" />
         <pointLight position={[0, 0, 4]} intensity={0.5} color="#ff2d2d" />
         <OrbitRig rotation={rotation} dragging={dragging} selected={selected} filter={filter} onSelect={(product) => { if (!pointer.current.moved) setSelected(product); }} onHover={setHovered} />
         <ContactShadows position={[0, -1.4, 0]} opacity={0.34} scale={13} blur={2.6} far={5} />
@@ -175,4 +175,3 @@ export function Products3D({ filter, setFilter }) {
 function AnimateBackdrop({ selected, onClose }) {
   return selected ? <button className="detail-backdrop" onClick={onClose} aria-label="Close camera details" /> : null;
 }
-
