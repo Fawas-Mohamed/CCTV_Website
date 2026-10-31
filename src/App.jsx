@@ -1,12 +1,12 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import { useReducedMotion } from 'framer-motion';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import { ProductsFlythrough } from './components/ProductsFlythrough.jsx';
 import { Categories, Footer, Reviews, Seam, Services } from './components/Sections.jsx';
 import { CartProvider } from './context/CartContext.jsx';
-
-const Products3D = lazy(() => import('./components/Products3D.jsx').then((module) => ({ default: module.Products3D })));
+import { registerLenis } from './utils/scrollToPosition.js';
 
 function MotionSystems() {
   const reduce = useReducedMotion();
@@ -31,28 +31,14 @@ function MotionSystems() {
   useEffect(() => {
     if (reduce) return;
     const lenis = new Lenis({ lerp: .09, smoothWheel: true, syncTouch: false });
+    const unregisterLenis = registerLenis(lenis);
     let raf = 0;
     const tick = (time) => { lenis.raf(time); raf = requestAnimationFrame(tick); };
     raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); lenis.destroy(); };
+    return () => { cancelAnimationFrame(raf); unregisterLenis(); lenis.destroy(); };
   }, [reduce]);
 
   return <div className="lens-glow" ref={glowRef} aria-hidden="true" />;
-}
-
-function ProductsLoader({ filter, setFilter }) {
-  const ref = useRef(null);
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setReady(true); observer.disconnect(); }
-    }, { rootMargin: '900px 0px' });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-  return <div id="products" className="products-loader" ref={ref}>
-    {ready ? <Suspense fallback={<div className="products-placeholder">Preparing the camera studio…</div>}><Products3D filter={filter} setFilter={setFilter} /></Suspense> : <div className="products-placeholder" aria-hidden="true" />}
-  </div>;
 }
 
 function Shop() {
@@ -71,9 +57,9 @@ function Shop() {
       <Hero />
       <Seam from="#05070b" to="#030813" beam="48%" />
       <Categories onChoose={chooseCategory} />
-      <Seam from="#030813" to="#071427" beam="30%" />
-      <ProductsLoader filter={filter} setFilter={setFilter} />
-      <Seam from="#071427" to="#040a14" beam="66%" />
+      <Seam from="#1C2227" to="#1C2227" beam="30%" />
+      <ProductsFlythrough filter={filter} setFilter={setFilter} />
+      <Seam from="#FFFFFF" to="#E7E7E7" beam="66%" />
       <Services />
       <Seam from="#040a14" to="#071427" beam="42%" />
       <Reviews />

@@ -1,10 +1,10 @@
 ﻿export const products = [
-  { id: 'bullet', name: 'Outdoor Bullet Camera', specs: ['Weatherproof', '4K', 'Night Vision'], icon: 'sun', color: '#101722', price: 129, categories: ['Business', 'Outdoor'], description: 'Rugged, weather-ready coverage with sharp 4K detail after dark.' },
-  { id: 'dome', name: 'Dome Camera', specs: ['Discreet', '4K', 'Wide Angle'], icon: 'eye', color: '#111722', price: 109, categories: ['Home', 'Business'], description: 'A discreet wide-angle view for entrances, halls, and shared spaces.' },
-  { id: 'ptz', name: 'PTZ Camera', specs: ['Pan', 'Tilt', 'Zoom', '4K'], icon: 'target', color: '#eef2f6', price: 249, categories: ['Business', 'Outdoor'], description: 'Move the view where you need it with pan, tilt, and optical zoom.' },
-  { id: 'ip', name: 'IP Camera', specs: ['High Resolution', 'PoE', 'Smart AI'], icon: 'camera', color: '#f1f4f7', price: 149, categories: ['Home', 'Business'], description: 'Flexible network video with clear detail and smart event detection.' },
-  { id: 'indoor', name: 'Indoor Camera', specs: ['Compact', '1080p', 'Two-way Audio'], icon: 'home', color: '#f5f6f8', price: 59, categories: ['Home'], description: 'A compact indoor view with two-way audio for everyday check-ins.' },
-  { id: 'fisheye', name: 'Fisheye Camera', specs: ['360° Coverage', '5MP', 'Panoramic View'], icon: 'aperture', color: '#121a25', price: 179, categories: ['Home', 'Business'], description: 'A panoramic 360° view that helps reduce blind spots in open rooms.' },
+  { id: 'bullet', name: 'Outdoor Bullet Camera', specs: ['Weatherproof', '4K', 'Night Vision'], icon: 'sun', color: '#101722', price: 129, categories: ['Business', 'Outdoor'], description: 'Weatherproof 4K housing with night vision. Built for doors, driveways and every outdoor edge.' },
+  { id: 'dome', name: 'Dome Camera', specs: ['Discreet', '4K', 'Wide Angle'], icon: 'eye', color: '#111722', price: 109, categories: ['Home', 'Business'], description: 'Discreet 4K dome with a wide-angle lens. Sees the whole room without drawing the eye.' },
+  { id: 'ptz', name: 'PTZ Camera', specs: ['Pan', 'Tilt', 'Zoom', '4K'], icon: 'target', color: '#eef2f6', price: 249, categories: ['Business', 'Outdoor'], description: 'Pan, tilt and zoom in 4K. One camera follows the action across the whole yard.' },
+  { id: 'ip', name: 'IP Camera', specs: ['High Resolution', 'PoE', 'Smart AI'], icon: 'camera', color: '#f1f4f7', price: 149, categories: ['Home', 'Business'], description: 'High-resolution PoE camera with smart AI alerts. Cleaner cabling, sharper detail.' },
+  { id: 'indoor', name: 'Indoor Camera', specs: ['Compact', '1080p', 'Two-way Audio'], icon: 'home', color: '#f5f6f8', price: 59, categories: ['Home'], description: 'Compact 1080p with two-way audio. Talk to the door or the nursery from your phone.' },
+  { id: 'fisheye', name: 'Fisheye Camera', specs: ['360° Coverage', '5MP', 'Panoramic View'], icon: 'aperture', color: '#121a25', price: 179, categories: ['Home', 'Business'], description: '360° coverage in 5MP. A panoramic view that leaves no blind corner.' },
 ];
 
 export const categories = [
