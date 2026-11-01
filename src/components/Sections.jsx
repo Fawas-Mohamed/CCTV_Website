@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDownRight, ArrowRight, CirclePlay, Shield, Star } from 'lucide-react';
-import { categories, reviews, services } from '../data/shop.js';
+import { ArrowDownRight, ArrowRight, Shield } from 'lucide-react';
+import { categories, services } from '../data/shop.js';
+
+const ReviewsBooks = lazy(() => import('./ReviewsBooks.jsx'));
 
 const frame = (number) => '/frames/CCTV_frames_30fps/frame_' + number + '.jpg';
 
@@ -84,55 +86,97 @@ export function Services() {
   </section>;
 }
 
-function ReviewCard({ review, index }) {
-  const tilt = (index % 5 - 2) * 1.1;
-  return <article className="review-card" style={{ '--tilt': tilt + 'deg', '--lift': (Math.abs(index % 7 - 3) * 8) + 'px' }}>
-    <div className="review-media"><img src={frame(review.frame)} alt="" loading="lazy" /><span className="review-play"><CirclePlay size={25} /></span></div>
-    <p>“{review.quote}”</p>
-    <div className="review-stars" aria-label="5 out of 5 stars">{[1,2,3,4,5].map((n) => <Star key={n} size={13} fill="currentColor" />)}</div>
-    <div className="review-author"><span>{review.name.split(' ').map((part) => part[0]).join('')}</span><div><strong>{review.name}</strong><small>{review.role}</small></div></div>
-  </article>;
-}
-
 export function Reviews() {
-  const railRef = useRef(null);
-  const pause = useRef(false);
-  const pointer = useRef({ x: 0, down: false });
+  const [inView, setInView] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const sectionRef = useRef(null);
+  const wordmarkRef = useRef(null);
+  const linksRef = useRef(null);
+  const topRowRef = useRef(null);
   const reduce = useReducedMotion();
-  const doubleReviews = useMemo(() => [...reviews, ...reviews], []);
 
   useEffect(() => {
-    const rail = railRef.current;
-    if (!rail || reduce) return;
-    let raf = 0;
-    let last = performance.now();
-    const tick = (now) => {
-      const dt = Math.min(40, now - last);
-      last = now;
-      if (!pause.current && !pointer.current.down) {
-        rail.scrollLeft += dt * 0.026;
-        if (rail.scrollLeft >= rail.scrollWidth / 2) rail.scrollLeft -= rail.scrollWidth / 2;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduce]);
+    const section = sectionRef.current;
+    if (!section) return undefined;
 
-  const onDown = (event) => { pointer.current = { x: event.clientX, down: true }; railRef.current.setPointerCapture(event.pointerId); pause.current = true; };
-  const onMove = (event) => { if (!pointer.current.down) return; railRef.current.scrollLeft -= event.clientX - pointer.current.x; pointer.current.x = event.clientX; };
-  const onUp = () => { pointer.current.down = false; pause.current = false; };
+    const observer = new IntersectionObserver(([entry]) => {
+      const visible = Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.35);
+      setInView(visible);
+      if (visible) setHasStarted(true);
+    }, { threshold: [0, 0.35, 0.5] });
 
-  return <section className="reviews-section" id="reviews">
-    <SectionTag camera="CAM 05">CUSTOMER STORIES</SectionTag>
-    <div className="reviews-heading"><span className="trust-badge"><i /> Trusted by 120,000+ happy customers</span><h2>Real People.<br /><em>Real Security Stories.</em></h2><p>Our customers trust our CCTV cameras to protect their homes and businesses. Here’s what they have to say about their experience.</p></div>
-    <div className="review-notes"><span>Real people. Real experiences.<svg viewBox="0 0 120 65"><path d="M6 10c35-4 44 10 53 42m0 0 5-17m-5 17-16-8" /></svg></span><span>See what our customers say<svg viewBox="0 0 120 65"><path d="M113 9C78 5 68 20 59 52m0 0-5-17m5 17 16-8" /></svg></span></div>
-    <div className="review-rail-wrap">
-      <div className="review-rail" ref={railRef} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onPointerLeave={onUp} onMouseEnter={() => { pause.current = true; }} onMouseLeave={() => { pause.current = false; }}>
-        {doubleReviews.map((review, index) => <ReviewCard key={index} review={review} index={index % reviews.length} />)}
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return undefined;
+    section.dispatchEvent(new Event('reviews-view-change'));
+    return undefined;
+  }, [inView]);
+
+  useEffect(() => {
+    if (!hasStarted) return undefined;
+    const wordmark = wordmarkRef.current;
+    const links = linksRef.current;
+    const topRow = topRowRef.current;
+    if (!wordmark || !links || !topRow) return undefined;
+
+    if (reduce || typeof wordmark.animate !== 'function') {
+      [wordmark, links, topRow].forEach((element) => {
+        element.style.opacity = '1';
+        element.style.filter = 'none';
+        element.style.transform = '';
+      });
+      return undefined;
+    }
+
+    const animations = [
+      wordmark.animate([
+        { opacity: 0, transform: 'translate(-1cqw, 4cqh)', filter: 'blur(14px)' },
+        { opacity: 1, transform: 'translate(-1cqw, 0)', filter: 'blur(0px)' },
+      ], { duration: 1400, delay: 150, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
+      topRow.animate([
+        { opacity: 0, transform: 'translateY(-1.2cqh)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ], { duration: 900, delay: 700, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
+      links.animate([
+        { opacity: 0, transform: 'translateY(1.2cqh)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ], { duration: 900, delay: 850, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
+    ];
+
+    return () => animations.forEach((animation) => animation.cancel());
+  }, [hasStarted, reduce]);
+
+  return <section className="reviews-section" id="reviews" ref={sectionRef}>
+    <div className="reviews-visual">
+      <div className="reviews-wordmark" ref={wordmarkRef}>Reviews</div>
+      <div className="reviews-links" aria-label="Customer types" ref={linksRef}>
+        <span>Homeowners</span>
+        <span>Business Owners</span>
+        <span>Installation</span>
+        <span>Night Vision</span>
+        <span>Mobile App</span>
+        <span>Support</span>
+      </div>
+      <div className="reviews-canvas-wrap">
+        {hasStarted && (
+          <Suspense fallback={null}>
+            <ReviewsBooks inView={inView} reducedMotion={reduce} />
+          </Suspense>
+        )}
+      </div>
+      <div className="reviews-top-row" ref={topRowRef}>
+        <SectionTag camera="CAM 05">REVIEWS</SectionTag>
+        <span className="review-trust-badge">SAMPLE REVIEWS</span>
+        <a className="review-explore" href="#contact">
+          <span className="review-explore-full">Explore Customer Stories →</span>
+          <span className="review-explore-short">Customer Stories →</span>
+        </a>
       </div>
     </div>
-    <a className="review-cta" href="#services"><span />Explore Customer Stories <ArrowRight size={16} /><span /></a>
   </section>;
 }
 

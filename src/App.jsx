@@ -61,9 +61,9 @@ function Shop() {
       <ProductsFlythrough filter={filter} setFilter={setFilter} />
       <Seam from="#FFFFFF" to="#E7E7E7" beam="66%" />
       <Services />
-      <Seam from="#040a14" to="#071427" beam="42%" />
+      <Seam from="#E7E7E7" to="#0A2A66" beam="42%" />
       <Reviews />
-      <Seam from="#071427" to="#030813" beam="none" />
+      <Seam from="#0A2A66" to="#121417" beam="none" />
       <Footer />
     </main>
   </CartProvider>;
