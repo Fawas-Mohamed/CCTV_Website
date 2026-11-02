@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+/source_frames/
+/.qa-results/
 
 # Production build
 dist/

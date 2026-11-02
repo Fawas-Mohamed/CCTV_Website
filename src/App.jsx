@@ -29,7 +29,7 @@ function MotionSystems() {
   }, [reduce]);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !window.matchMedia('(pointer: fine)').matches) return undefined;
     const lenis = new Lenis({ lerp: .09, smoothWheel: true, syncTouch: false });
     const unregisterLenis = registerLenis(lenis);
     let raf = 0;
@@ -55,15 +55,15 @@ function Shop() {
     <Header />
     <main>
       <Hero />
-      <Seam from="#05070b" to="#030813" beam="48%" />
+      <Seam from="#000000" to="#000000" beam="48%" />
       <Categories onChoose={chooseCategory} />
-      <Seam from="#1C2227" to="#1C2227" beam="30%" />
+      <Seam from="#000000" to="#000000" beam="30%" />
       <ProductsFlythrough filter={filter} setFilter={setFilter} />
-      <Seam from="#FFFFFF" to="#E7E7E7" beam="66%" />
+      <Seam from="#FFFFFF" to="#FFFFFF" beam="66%" />
       <Services />
-      <Seam from="#E7E7E7" to="#0A2A66" beam="42%" />
+      <Seam from="#FFFFFF" to="#0A2A66" beam="42%" />
       <Reviews />
-      <Seam from="#0A2A66" to="#121417" beam="none" />
+      <Seam from="#0A2A66" to="#000000" beam="none" />
       <Footer />
     </main>
   </CartProvider>;

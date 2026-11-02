@@ -1,17 +1,15 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDownRight, ArrowRight, Shield } from 'lucide-react';
-import { categories, services } from '../data/shop.js';
-
-const ReviewsBooks = lazy(() => import('./ReviewsBooks.jsx'));
-
-const frame = (number) => '/frames/CCTV_frames_30fps/frame_' + number + '.jpg';
+import { categories, framePath, services } from '../data/shop.js';
+import ReviewsCarousel from './ReviewsCarousel.jsx';
+const frame = (number) => framePath(number);
 
 export function SectionTag({ children, camera = 'CAM 02' }) {
   return <div className="section-tag"><span className="tag-corners" /><span className="tag-rec"><i className="rec-dot" /> REC</span><span>{camera} · {children}</span></div>;
 }
 
-export function Seam({ from = '#05070B', to = '#030813', beam = '48%' }) {
+export function Seam({ from = '#000000', to = '#000000', beam = '48%' }) {
   return <div className="seam" aria-hidden="true">
     <svg className="seam-svg" viewBox="0 0 1440 180" preserveAspectRatio="none">
       <path d="M0 0H1440V55L1290 72 1180 65 1050 95 930 82 810 120 680 100 545 130 420 104 300 119 180 82 70 96 0 76Z" fill={from} />
@@ -87,97 +85,7 @@ export function Services() {
 }
 
 export function Reviews() {
-  const [inView, setInView] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-  const sectionRef = useRef(null);
-  const wordmarkRef = useRef(null);
-  const linksRef = useRef(null);
-  const topRowRef = useRef(null);
-  const reduce = useReducedMotion();
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return undefined;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      const visible = Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.35);
-      setInView(visible);
-      if (visible) setHasStarted(true);
-    }, { threshold: [0, 0.35, 0.5] });
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return undefined;
-    section.dispatchEvent(new Event('reviews-view-change'));
-    return undefined;
-  }, [inView]);
-
-  useEffect(() => {
-    if (!hasStarted) return undefined;
-    const wordmark = wordmarkRef.current;
-    const links = linksRef.current;
-    const topRow = topRowRef.current;
-    if (!wordmark || !links || !topRow) return undefined;
-
-    if (reduce || typeof wordmark.animate !== 'function') {
-      [wordmark, links, topRow].forEach((element) => {
-        element.style.opacity = '1';
-        element.style.filter = 'none';
-        element.style.transform = '';
-      });
-      return undefined;
-    }
-
-    const animations = [
-      wordmark.animate([
-        { opacity: 0, transform: 'translate(-1cqw, 4cqh)', filter: 'blur(14px)' },
-        { opacity: 1, transform: 'translate(-1cqw, 0)', filter: 'blur(0px)' },
-      ], { duration: 1400, delay: 150, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
-      topRow.animate([
-        { opacity: 0, transform: 'translateY(-1.2cqh)' },
-        { opacity: 1, transform: 'translateY(0)' },
-      ], { duration: 900, delay: 700, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
-      links.animate([
-        { opacity: 0, transform: 'translateY(1.2cqh)' },
-        { opacity: 1, transform: 'translateY(0)' },
-      ], { duration: 900, delay: 850, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }),
-    ];
-
-    return () => animations.forEach((animation) => animation.cancel());
-  }, [hasStarted, reduce]);
-
-  return <section className="reviews-section" id="reviews" ref={sectionRef}>
-    <div className="reviews-visual">
-      <div className="reviews-wordmark" ref={wordmarkRef}>Reviews</div>
-      <div className="reviews-links" aria-label="Customer types" ref={linksRef}>
-        <span>Homeowners</span>
-        <span>Business Owners</span>
-        <span>Installation</span>
-        <span>Night Vision</span>
-        <span>Mobile App</span>
-        <span>Support</span>
-      </div>
-      <div className="reviews-canvas-wrap">
-        {hasStarted && (
-          <Suspense fallback={null}>
-            <ReviewsBooks inView={inView} reducedMotion={reduce} />
-          </Suspense>
-        )}
-      </div>
-      <div className="reviews-top-row" ref={topRowRef}>
-        <SectionTag camera="CAM 05">REVIEWS</SectionTag>
-        <span className="review-trust-badge">SAMPLE REVIEWS</span>
-        <a className="review-explore" href="#contact">
-          <span className="review-explore-full">Explore Customer Stories →</span>
-          <span className="review-explore-short">Customer Stories →</span>
-        </a>
-      </div>
-    </div>
-  </section>;
+  return <ReviewsCarousel SectionTag={SectionTag} />;
 }
 
 export function Footer() {

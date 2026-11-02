@@ -1,4 +1,10 @@
-﻿export const products = [
+export const framePath = (sourceFrame) => {
+  const index = Number(sourceFrame);
+  const compactIndex = index - Math.floor((index + 2) / 5);
+  return '/frames/d/frame_' + String(compactIndex).padStart(4, '0') + '.webp';
+};
+
+export const products = [
   { id: 'bullet', name: 'Outdoor Bullet Camera', specs: ['Weatherproof', '4K', 'Night Vision'], icon: 'sun', color: '#101722', price: 129, categories: ['Business', 'Outdoor'], description: 'Weatherproof 4K housing with night vision. Built for doors, driveways and every outdoor edge.' },
   { id: 'dome', name: 'Dome Camera', specs: ['Discreet', '4K', 'Wide Angle'], icon: 'eye', color: '#111722', price: 109, categories: ['Home', 'Business'], description: 'Discreet 4K dome with a wide-angle lens. Sees the whole room without drawing the eye.' },
   { id: 'ptz', name: 'PTZ Camera', specs: ['Pan', 'Tilt', 'Zoom', '4K'], icon: 'target', color: '#eef2f6', price: 249, categories: ['Business', 'Outdoor'], description: 'Pan, tilt and zoom in 4K. One camera follows the action across the whole yard.' },
@@ -8,9 +14,9 @@
 ];
 
 export const categories = [
-  { id: 'home', name: 'home cameras', title: 'Home cameras', video: '/videos/home.mp4', poster: '/frames/CCTV_frames_30fps/frame_0001.jpg', filter: 'Home' },
-  { id: 'business', name: 'business systems', title: 'Business systems', video: '/videos/business.mp4', poster: '/frames/CCTV_frames_30fps/frame_0180.jpg', filter: 'Business' },
-  { id: 'outdoor', name: 'night & outdoor', title: 'Night & outdoor', video: '/videos/outdoor.mp4', poster: '/frames/CCTV_frames_30fps/frame_0120.jpg', filter: 'Outdoor' },
+  { id: 'home', name: 'home cameras', title: 'Home cameras', video: '/videos/home.mp4', poster: framePath(1), filter: 'Home' },
+  { id: 'business', name: 'business systems', title: 'Business systems', video: '/videos/business.mp4', poster: framePath(180), filter: 'Business' },
+  { id: 'outdoor', name: 'night & outdoor', title: 'Night & outdoor', video: '/videos/outdoor.mp4', poster: framePath(120), filter: 'Outdoor' },
 ];
 
 export const services = [
