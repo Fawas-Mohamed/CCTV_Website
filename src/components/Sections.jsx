@@ -54,7 +54,7 @@ function CategoryCard({ category, index, onChoose }) {
 export function Categories({ onChoose }) {
   return <section className="categories-section" id="categories">
     <SectionTag>CAMERAS · CATEGORIES</SectionTag>
-    <div className="section-intro categories-intro"><div><span className="overline">FIND YOUR VIEW</span><h2 className="section-title">Protection for <em>every place.</em></h2></div><p>Considered cameras and systems for the people and spaces you want to protect.</p></div>
+    <div className="section-intro categories-intro"><div><span className="overline">FIND YOUR VIEW</span><h2 className="section-title">Protection for <em>every place.</em></h2></div></div>
     <div className="category-grid">{categories.map((category, index) => <CategoryCard key={category.id} category={category} index={index} onChoose={onChoose} />)}</div>
   </section>;
 }

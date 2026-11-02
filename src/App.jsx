@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { useReducedMotion } from 'framer-motion';
 import Header from './components/Header.jsx';
@@ -10,23 +10,6 @@ import { registerLenis } from './utils/scrollToPosition.js';
 
 function MotionSystems() {
   const reduce = useReducedMotion();
-  const glowRef = useRef(null);
-
-  useEffect(() => {
-    if (reduce || !window.matchMedia('(pointer: fine)').matches) return;
-    let targetX = window.innerWidth * .5;
-    let targetY = window.innerHeight * .4;
-    let x = targetX, y = targetY, raf = 0;
-    const onMove = (event) => { targetX = event.clientX; targetY = event.clientY; };
-    const animate = () => {
-      x += (targetX - x) * .12; y += (targetY - y) * .12;
-      if (glowRef.current) { glowRef.current.style.left = x + 'px'; glowRef.current.style.top = y + 'px'; }
-      raf = requestAnimationFrame(animate);
-    };
-    window.addEventListener('pointermove', onMove, { passive: true });
-    raf = requestAnimationFrame(animate);
-    return () => { window.removeEventListener('pointermove', onMove); cancelAnimationFrame(raf); };
-  }, [reduce]);
 
   useEffect(() => {
     if (reduce || !window.matchMedia('(pointer: fine)').matches) return undefined;
@@ -38,7 +21,7 @@ function MotionSystems() {
     return () => { cancelAnimationFrame(raf); unregisterLenis(); lenis.destroy(); };
   }, [reduce]);
 
-  return <div className="lens-glow" ref={glowRef} aria-hidden="true" />;
+  return null;
 }
 
 function Shop() {
