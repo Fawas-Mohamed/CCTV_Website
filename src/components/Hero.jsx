@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { Activity, ArrowRight, ShieldCheck, Smartphone } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 const FRAME_COUNT = 299;
@@ -279,7 +279,7 @@ export default function Hero() {
   }, [reduceMotion]);
 
   const copy = [
-    { label: 'PREMIUM CCTV SECURITY', title: <>Secure <em>Your World</em></>, text: 'Premium CCTV security cameras for a safer tomorrow.' },
+    { label: 'SMART SECURITY. GREATER PEACE OF MIND.', title: <>Advanced<br /><span className="hero-title-accent">CCTV</span> Solutions</>, text: 'Monitor your home and business anytime, anywhere with crystal-clear clarity.' },
     { label: 'BUILT TO WATCH · BUILT TO LAST', title: <>Clarity <em>after dark.</em></>, text: 'Weatherproof cameras, 4K detail, and dependable night vision.' },
     { label: 'CAM 01 · FRONT DOOR', title: <>See more.<br /><em>Know sooner.</em></>, text: 'Get a clearer view and stay aware when something needs your attention.' },
   ];
@@ -288,10 +288,11 @@ export default function Hero() {
     <div className="hero-stage" ref={stageRef}>
       <canvas ref={canvasRef} className="hero-canvas" aria-label="CCTV camera scroll animation" />
       <div className="hero-vignette" />
+      <div className="hero-corners" aria-hidden="true"><span className="hero-corner hero-corner-top" /><span className="hero-corner hero-corner-bottom" /></div>
       <div className="hero-hud"><span><i className="rec-dot" /> REC</span><span className="battery">▰▰▰▱ 78%</span></div>
       <div className="hero-copy">
         <AnimatePresence mode="wait">
-          <motion.div key={chapter} className="hero-copy-inner"
+          <motion.div key={chapter} className={chapter === 0 ? 'hero-copy-inner hero-copy-reference' : 'hero-copy-inner'}
             initial={reduceMotion ? false : { y: 28, clipPath: 'inset(0 0 100% 0)' }}
             animate={{ y: 0, clipPath: 'inset(0 0 0% 0)' }}
             exit={reduceMotion ? undefined : { y: -20, clipPath: 'inset(100% 0 0 0)' }}
@@ -299,9 +300,17 @@ export default function Hero() {
             <span className="hero-kicker"><i className="rec-dot" /> {copy[chapter].label}</span>
             <h1>{copy[chapter].title}</h1>
             <p>{copy[chapter].text}</p>
-            <div className="hero-actions">
-              <a className="btn-primary" href="#products"><ShieldCheck size={18} /> Secure Your Home <span className="btn-arrow"><ArrowRight size={16} /></span></a>
-              <a className="btn-ghost" href="#services">Book a Survey</a>
+            {chapter === 0 && <div className="hero-features" aria-label="Camera features">
+              <div className="hero-feature"><span className="hero-feature-icon"><ShieldCheck size={26} /></span><span>24/7<br />Surveillance</span></div>
+              <div className="hero-feature"><span className="hero-feature-icon"><b>HD</b></span><span>Crystal Clear<br />HD Quality</span></div>
+              <div className="hero-feature"><span className="hero-feature-icon"><Activity size={26} /></span><span>Motion<br />Detection</span></div>
+              <div className="hero-feature"><span className="hero-feature-icon"><Smartphone size={24} /></span><span>Remote<br />Access</span></div>
+            </div>}
+            <div className={`hero-actions ${chapter === 0 ? 'hero-actions-featured' : ''}`}>
+              {chapter === 0 ? <a className="btn-primary hero-explore" href="#products">Explore Products <ArrowRight size={18} /></a> : <>
+                <a className="btn-primary hero-explore" href="#products">Secure Your Home <ArrowRight size={18} /></a>
+                <a className="btn-ghost" href="#services">Book a Survey</a>
+              </>}
             </div>
           </motion.div>
         </AnimatePresence>

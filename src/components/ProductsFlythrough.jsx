@@ -283,20 +283,6 @@ export function ProductsFlythrough({ filter, setFilter }) {
     style={trackStyle}
   >
     <div className="pf-stage" ref={stageRef}>
-      <div className="pf-intro">
-        <span className="pf-kicker">SMARTER BY DESIGN · CAM 03</span>
-        <h2>Secure <em>Your World</em></h2>
-        <p>PREMIUM CCTV SECURITY CAMERAS FOR A SAFER TOMORROW</p>
-        <div className="pf-filters" role="group" aria-label="Filter cameras">
-          {filters.map((item) => <button
-            key={item}
-            type="button"
-            className={filter === item ? 'is-active' : ''}
-            aria-pressed={filter === item}
-            onClick={() => setFilter(item)}
-          >{item}</button>)}
-        </div>
-      </div>
       {!reduceMotion && <div className="pf-white" ref={whiteRef} aria-hidden="true">
         <div className="pf-scene">
           <div className="pf-section-tag">CAM 03 · PRODUCTS</div>
