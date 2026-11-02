@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDownRight, ArrowRight, CirclePlay, Shield, Star } from 'lucide-react';
-import { categories, reviews, services } from '../data/shop.js';
-
-const frame = (number) => '/frames/CCTV_frames_30fps/frame_' + number + '.jpg';
+import { ArrowDownRight, ArrowRight, Shield } from 'lucide-react';
+import { categories, framePath, services } from '../data/shop.js';
+import ReviewsCarousel from './ReviewsCarousel.jsx';
+const frame = (number) => framePath(number);
 
 export function SectionTag({ children, camera = 'CAM 02' }) {
   return <div className="section-tag"><span className="tag-corners" /><span className="tag-rec"><i className="rec-dot" /> REC</span><span>{camera} · {children}</span></div>;
 }
 
-export function Seam({ from = '#05070B', to = '#030813', beam = '48%' }) {
+export function Seam({ from = '#000000', to = '#000000', beam = '48%' }) {
   return <div className="seam" aria-hidden="true">
     <svg className="seam-svg" viewBox="0 0 1440 180" preserveAspectRatio="none">
       <path d="M0 0H1440V55L1290 72 1180 65 1050 95 930 82 810 120 680 100 545 130 420 104 300 119 180 82 70 96 0 76Z" fill={from} />
@@ -54,7 +54,7 @@ function CategoryCard({ category, index, onChoose }) {
 export function Categories({ onChoose }) {
   return <section className="categories-section" id="categories">
     <SectionTag>CAMERAS · CATEGORIES</SectionTag>
-    <div className="section-intro categories-intro"><div><span className="overline">FIND YOUR VIEW</span><h2 className="section-title">Protection for <em>every place.</em></h2></div><p>Considered cameras and systems for the people and spaces you want to protect.</p></div>
+    <div className="section-intro categories-intro"><div><span className="overline">FIND YOUR VIEW</span><h2 className="section-title">Protection for <em>every place.</em></h2></div></div>
     <div className="category-grid">{categories.map((category, index) => <CategoryCard key={category.id} category={category} index={index} onChoose={onChoose} />)}</div>
   </section>;
 }
@@ -84,56 +84,8 @@ export function Services() {
   </section>;
 }
 
-function ReviewCard({ review, index }) {
-  const tilt = (index % 5 - 2) * 1.1;
-  return <article className="review-card" style={{ '--tilt': tilt + 'deg', '--lift': (Math.abs(index % 7 - 3) * 8) + 'px' }}>
-    <div className="review-media"><img src={frame(review.frame)} alt="" loading="lazy" /><span className="review-play"><CirclePlay size={25} /></span></div>
-    <p>“{review.quote}”</p>
-    <div className="review-stars" aria-label="5 out of 5 stars">{[1,2,3,4,5].map((n) => <Star key={n} size={13} fill="currentColor" />)}</div>
-    <div className="review-author"><span>{review.name.split(' ').map((part) => part[0]).join('')}</span><div><strong>{review.name}</strong><small>{review.role}</small></div></div>
-  </article>;
-}
-
 export function Reviews() {
-  const railRef = useRef(null);
-  const pause = useRef(false);
-  const pointer = useRef({ x: 0, down: false });
-  const reduce = useReducedMotion();
-  const doubleReviews = useMemo(() => [...reviews, ...reviews], []);
-
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail || reduce) return;
-    let raf = 0;
-    let last = performance.now();
-    const tick = (now) => {
-      const dt = Math.min(40, now - last);
-      last = now;
-      if (!pause.current && !pointer.current.down) {
-        rail.scrollLeft += dt * 0.026;
-        if (rail.scrollLeft >= rail.scrollWidth / 2) rail.scrollLeft -= rail.scrollWidth / 2;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduce]);
-
-  const onDown = (event) => { pointer.current = { x: event.clientX, down: true }; railRef.current.setPointerCapture(event.pointerId); pause.current = true; };
-  const onMove = (event) => { if (!pointer.current.down) return; railRef.current.scrollLeft -= event.clientX - pointer.current.x; pointer.current.x = event.clientX; };
-  const onUp = () => { pointer.current.down = false; pause.current = false; };
-
-  return <section className="reviews-section" id="reviews">
-    <SectionTag camera="CAM 05">CUSTOMER STORIES</SectionTag>
-    <div className="reviews-heading"><span className="trust-badge"><i /> Trusted by 120,000+ happy customers</span><h2>Real People.<br /><em>Real Security Stories.</em></h2><p>Our customers trust our CCTV cameras to protect their homes and businesses. Here’s what they have to say about their experience.</p></div>
-    <div className="review-notes"><span>Real people. Real experiences.<svg viewBox="0 0 120 65"><path d="M6 10c35-4 44 10 53 42m0 0 5-17m-5 17-16-8" /></svg></span><span>See what our customers say<svg viewBox="0 0 120 65"><path d="M113 9C78 5 68 20 59 52m0 0-5-17m5 17 16-8" /></svg></span></div>
-    <div className="review-rail-wrap">
-      <div className="review-rail" ref={railRef} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onPointerLeave={onUp} onMouseEnter={() => { pause.current = true; }} onMouseLeave={() => { pause.current = false; }}>
-        {doubleReviews.map((review, index) => <ReviewCard key={index} review={review} index={index % reviews.length} />)}
-      </div>
-    </div>
-    <a className="review-cta" href="#services"><span />Explore Customer Stories <ArrowRight size={16} /><span /></a>
-  </section>;
+  return <ReviewsCarousel SectionTag={SectionTag} />;
 }
 
 export function Footer() {

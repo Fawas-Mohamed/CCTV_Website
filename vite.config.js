@@ -6,7 +6,6 @@ const normalizePath = (path) => path.replaceAll('\\', '/');
 export default defineConfig({
   plugins: [react()],
   build: {
-    // The 3D engine is loaded with the product viewer and compresses to ~192 KB.
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       onwarn(warning, defaultHandler) {
@@ -19,14 +18,6 @@ export default defineConfig({
         // ignores it, so avoid repeating the same harmless warning per module.
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && warning.message.includes('"use client"') && isClientOnlyPackage) return;
         defaultHandler(warning);
-      },
-      output: {
-        manualChunks(id) {
-          const path = normalizePath(id);
-          if (path.includes('/node_modules/three/')) return 'three-core';
-          if (path.includes('/node_modules/@react-three/fiber/')) return 'r3f-fiber';
-          if (path.includes('/node_modules/@react-three/drei/')) return 'r3f-drei';
-        },
       },
     },
   },

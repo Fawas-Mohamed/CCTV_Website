@@ -22,7 +22,7 @@ export function CartProvider({ children }) {
         const found = current.find((item) => item.id === product.id);
         return found
           ? current.map((item) => item.id === product.id ? { ...item, qty: item.qty + qty } : item)
-          : [...current, { id: product.id, name: product.name, price: product.price, qty, image: '/products/showcase.png' }];
+          : [...current, { id: product.id, name: product.name, price: product.price, qty, image: '/products/showcase.webp' }];
       });
     },
     setQty(id, qty) {

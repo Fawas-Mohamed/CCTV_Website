@@ -7,7 +7,6 @@ import { flyToCart } from '../utils/flyToCart.js';
 import { scrollToPosition } from '../utils/scrollToPosition.js';
 
 const START = 0.26;
-const END = 0.9;
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const lerp = (from, to, amount) => from + (to - from) * amount;
 const ease = (value) => value * value * (3 - 2 * value);
@@ -30,29 +29,30 @@ const mobileSpots = [
 ];
 
 export function featurePose(progress, index, count) {
-  const windowSize = (END - START) / count;
+  const windowSize = (1 - START) / (count + 0.25);
   const center = START + (index + 0.5) * windowSize;
   const windowProgress = clamp((progress - (center - windowSize * 0.75)) / (windowSize * 1.5));
-  const focus = windowProgress < 0.4
-    ? ease(windowProgress / 0.4)
-    : windowProgress < 0.6
+  const poseProgress = index === count - 1 ? Math.min(windowProgress, 0.6) : windowProgress;
+  const focus = poseProgress < 0.4
+    ? ease(poseProgress / 0.4)
+    : poseProgress < 0.6
       ? 1
-      : ease((1 - windowProgress) / 0.4);
-  const y = windowProgress < 0.4
-    ? lerp(60, 0, ease(windowProgress / 0.4))
-    : windowProgress < 0.6
+      : ease((1 - poseProgress) / 0.4);
+  const y = poseProgress < 0.4
+    ? lerp(60, 0, ease(poseProgress / 0.4))
+    : poseProgress < 0.6
       ? 0
-      : lerp(0, -60, ease((windowProgress - 0.6) / 0.4));
+      : lerp(0, -60, ease((poseProgress - 0.6) / 0.4));
   return {
     center,
     focus,
     y,
-    rotation: lerp(-42, 42, windowProgress),
+    rotation: lerp(-42, 42, poseProgress),
     z: -420 * (1 - focus),
     blur: 14 * (1 - focus),
     opacity: Math.pow(focus, 0.6),
     scale: 0.9 + 0.1 * focus,
-    live: windowProgress > 0 && windowProgress < 1,
+    live: index === count - 1 ? windowProgress > 0 : windowProgress > 0 && windowProgress < 1,
   };
 }
 
@@ -148,14 +148,26 @@ export function ProductsFlythrough({ filter, setFilter }) {
     const stage = stageRef.current;
     if (!track || !stage || reduceMotion) return undefined;
     let raf = 0;
+    let trackTop = 0;
+    let scrollRange = 1;
+    let headerHeight = 0;
+    let mobilePortrait = false;
+    let lastProgress = null;
+    let lastPointerX = null;
+    let lastPointerY = null;
+    const finePointerQuery = window.matchMedia('(pointer: fine)');
     const onScroll = () => {
       if (!raf) raf = window.requestAnimationFrame(update);
     };
     const update = () => {
       raf = 0;
-      const range = Math.max(1, track.offsetHeight - stage.clientHeight);
-      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
-      const progress = clamp((headerHeight - track.getBoundingClientRect().top) / range);
+      const progress = clamp((window.scrollY - trackTop + headerHeight) / scrollRange);
+      if (progress === lastProgress
+        && pointer.current.x === lastPointerX
+        && pointer.current.y === lastPointerY) return;
+      lastProgress = progress;
+      lastPointerX = pointer.current.x;
+      lastPointerY = pointer.current.y;
       const reveal = ease(clamp(progress / 0.1));
       if (whiteRef.current) {
         whiteRef.current.style.clipPath = `ellipse(${76 * reveal}% ${76 * reveal}% at 50% 50%)`;
@@ -176,7 +188,6 @@ export function ProductsFlythrough({ filter, setFilter }) {
       const scatterScale = 0.72 + 0.28 * scatterVisibility;
       scatterButtonsRef.current.forEach((button, index) => {
         if (!button) return;
-        const mobilePortrait = window.innerWidth <= 899 && window.innerHeight > 520;
         const spot = mobilePortrait
           ? mobileSpots[index] ?? mobileSpots[mobileSpots.length - 1]
           : scatterSpots[index] ?? scatterSpots[scatterSpots.length - 1];
@@ -218,20 +229,34 @@ export function ProductsFlythrough({ filter, setFilter }) {
         if (ground) ground.style.opacity = String(pose.focus * 0.8);
       });
     };
+    const measure = () => {
+      trackTop = track.getBoundingClientRect().top + window.scrollY;
+      scrollRange = Math.max(1, track.offsetHeight - stage.clientHeight);
+      headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      mobilePortrait = window.innerWidth <= 899 && window.innerHeight > 520;
+      lastProgress = null;
+      onScroll();
+    };
     const onPointerMove = (event) => {
-      if (!window.matchMedia('(pointer: fine)').matches) return;
+      if (!finePointerQuery.matches) return;
       pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
       pointer.current.y = (event.clientY / window.innerHeight - 0.5) * 2;
       onScroll();
     };
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(track);
+    resizeObserver.observe(stage);
+    const main = track.closest('main');
+    if (main) resizeObserver.observe(main);
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
     window.addEventListener('pointermove', onPointerMove, { passive: true });
-    onScroll();
+    measure();
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', measure);
       window.removeEventListener('pointermove', onPointerMove);
       window.cancelAnimationFrame(raf);
     };
@@ -258,20 +283,6 @@ export function ProductsFlythrough({ filter, setFilter }) {
     style={trackStyle}
   >
     <div className="pf-stage" ref={stageRef}>
-      <div className="pf-intro">
-        <span className="pf-kicker">SMARTER BY DESIGN · CAM 03</span>
-        <h2>Secure <em>Your World</em></h2>
-        <p>PREMIUM CCTV SECURITY CAMERAS FOR A SAFER TOMORROW</p>
-        <div className="pf-filters" role="group" aria-label="Filter cameras">
-          {filters.map((item) => <button
-            key={item}
-            type="button"
-            className={filter === item ? 'is-active' : ''}
-            aria-pressed={filter === item}
-            onClick={() => setFilter(item)}
-          >{item}</button>)}
-        </div>
-      </div>
       {!reduceMotion && <div className="pf-white" ref={whiteRef} aria-hidden="true">
         <div className="pf-scene">
           <div className="pf-section-tag">CAM 03 · PRODUCTS</div>

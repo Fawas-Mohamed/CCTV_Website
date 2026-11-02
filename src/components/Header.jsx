@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Menu, ShoppingCart, UserRound, X, ArrowRight, Minus, Plus, Trash2, Shield } from 'lucide-react';
 import { useCart } from '../context/CartContext.jsx';
 import { products } from '../data/shop.js';
@@ -37,7 +37,7 @@ function CartDrawer({ open, onClose }) {
         <div className="cart-lines">{items.map((item) => {
           const product = products.find((entry) => entry.id === item.id);
           return <article className="cart-line" key={item.id}>
-            <div className="cart-thumb"><img src="/products/showcase.png" alt="" style={{ objectPosition: product?.thumb || '50% 50%' }} /></div>
+            <div className="cart-thumb"><img src="/products/showcase.webp" alt="" style={{ objectPosition: product?.thumb || '50% 50%' }} /></div>
             <div className="cart-line-info"><strong>{item.name}</strong><span>{money(item.price)}</span><div className="qty-control"><button onClick={() => setQty(item.id, item.qty - 1)} aria-label={'Decrease ' + item.name}><Minus size={14} /></button><span>{item.qty}</span><button onClick={() => setQty(item.id, item.qty + 1)} aria-label={'Increase ' + item.name}><Plus size={14} /></button></div></div>
             <button className="remove-button" onClick={() => remove(item.id)} aria-label={'Remove ' + item.name}><Trash2 size={17} /></button>
           </article>;
@@ -57,7 +57,13 @@ export default function Header() {
   const menuRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    let lastScrolled = window.scrollY > 8;
+    const onScroll = () => {
+      const nextScrolled = window.scrollY > 8;
+      if (nextScrolled === lastScrolled) return;
+      lastScrolled = nextScrolled;
+      setScrolled(nextScrolled);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -72,7 +78,7 @@ export default function Header() {
   const links = [['HOME', '#home'], ['CAMERAS', '#categories'], ['BUSINESS', '#services'], ['PRODUCTS', '#products'], ['SERVICES', '#services'], ['REVIEWS', '#reviews']];
   return <>
     <header className={'shop-header' + (scrolled ? ' is-scrolled' : '')}>
-      <a className="wordmark" href="#home"><span className="brand-lens"><i /></span><span>SECUREVIEW</span></a>
+      <a className="wordmark" href="#home"><span className="brand-lens"><i /></span><span className="brand-name"><span>Secure</span><span>View</span></span></a>
       <nav className={'primary-nav' + (menuOpen ? ' is-open' : '')} aria-label="Main navigation" ref={menuRef}>
         <div className="mobile-nav-top"><span>MENU</span><button className="icon-button" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button></div>
         {links.map(([label, href]) => <a key={label + href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
