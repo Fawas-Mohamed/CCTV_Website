@@ -55,15 +55,15 @@ function Shop() {
     <Header />
     <main>
       <Hero />
-      <Seam from="#000000" to="#000000" beam="48%" />
+      <Seam from="#0E1213" to="#0E1213" beam="48%" />
       <Categories onChoose={chooseCategory} />
-      <Seam from="#000000" to="#000000" beam="30%" />
+      <Seam from="#0E1213" to="#0E1213" beam="30%" />
       <ProductsFlythrough filter={filter} setFilter={setFilter} />
-      <Seam from="#FFFFFF" to="#FFFFFF" beam="66%" />
+      <Seam from="#FFFFFF" to="#EA6600" beam="66%" />
       <Services />
-      <Seam from="#FFFFFF" to="#0A2A66" beam="42%" />
+      <Seam from="#C55404" to="#0E1213" beam="42%" />
       <Reviews />
-      <Seam from="#0A2A66" to="#000000" beam="none" />
+      <Seam from="#0E1213" to="#0E1213" beam="none" />
       <Footer />
     </main>
   </CartProvider>;

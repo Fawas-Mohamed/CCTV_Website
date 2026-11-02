@@ -1,7 +1,7 @@
 export const framePath = (sourceFrame) => {
   const index = Number(sourceFrame);
   const compactIndex = index - Math.floor((index + 2) / 5);
-  return '/frames/d/frame_' + String(compactIndex).padStart(4, '0') + '.webp';
+  return '/frames/d/frame_' + String(compactIndex).padStart(4, '0') + '.jpg';
 };
 
 export const products = [

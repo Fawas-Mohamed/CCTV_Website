@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
-const FRAME_COUNT = 192;
+const FRAME_COUNT = 299;
 const FRAME_ROOT = '/frames';
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -51,7 +51,7 @@ export default function Hero() {
     function load(index) {
       if (index < 0 || index >= FRAME_COUNT) return;
       const image = frames[index];
-      const source = `${FRAME_ROOT}/${mode === 'phone' ? 'm' : mode === 'tablet' ? 't' : 'd'}/frame_${String(index + 1).padStart(4, '0')}.webp`;
+      const source = `${FRAME_ROOT}/${mode === 'phone' ? 'm' : mode === 'tablet' ? 't' : 'd'}/frame_${String(index + 1).padStart(4, '0')}.jpg`;
       if (frameSources[index] === source) {
         if (index === activeFrame) image.fetchPriority = 'high';
         return;
