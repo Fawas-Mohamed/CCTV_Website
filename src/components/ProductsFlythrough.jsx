@@ -20,12 +20,12 @@ const scatterSpots = [
 ];
 const featurePositions = [24, 36, 22, 38, 26, 34];
 const mobileSpots = [
-  { x: 26, y: 58 },
-  { x: 74, y: 58 },
-  { x: 26, y: 70 },
-  { x: 74, y: 70 },
-  { x: 26, y: 82 },
-  { x: 74, y: 82 },
+  { x: 48, y: 14 },
+  { x: 18, y: 24 },
+  { x: 84, y: 19 },
+  { x: 84, y: 50 },
+  { x: 18, y: 53 },
+  { x: 52, y: 56 },
 ];
 
 export function featurePose(progress, index, count) {
@@ -56,9 +56,9 @@ export function featurePose(progress, index, count) {
   };
 }
 
-function ProductButton({ label, onClick, className = '' }) {
+function ProductButton({ label, mobileLabel, onClick, className = '' }) {
   return <button type="button" className={'pf-pill-button ' + className} onClick={onClick}>
-    <span>{label}</span><span className="pf-arrow-circle" aria-hidden="true"><ArrowRight size={17} /></span>
+    <span className="pf-button-label">{label}</span>{mobileLabel && <span className="pf-button-label-mobile">{mobileLabel}</span>}<span className="pf-arrow-circle" aria-hidden="true"><ArrowRight size={17} /></span>
   </button>;
 }
 
@@ -193,6 +193,8 @@ export function ProductsFlythrough({ filter, setFilter }) {
           : scatterSpots[index] ?? scatterSpots[scatterSpots.length - 1];
         const floatX = Math.sin(progress * Math.PI * 2 + index * 1.7) * 10;
         const floatY = Math.cos(progress * Math.PI * 2 + index * 1.3) * 8;
+        button.style.left = spot.x + '%';
+        button.style.top = spot.y + '%';
         const pointerX = pointer.current.x * 10 * (spot.y / 100);
         const pointerY = pointer.current.y * 8 * (spot.x / 100);
         button.style.opacity = String(scatterVisibility);
@@ -233,7 +235,7 @@ export function ProductsFlythrough({ filter, setFilter }) {
       trackTop = track.getBoundingClientRect().top + window.scrollY;
       scrollRange = Math.max(1, track.offsetHeight - stage.clientHeight);
       headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
-      mobilePortrait = window.innerWidth <= 899 && window.innerHeight > 520;
+      mobilePortrait = window.innerWidth <= 899 && window.innerHeight > window.innerWidth;
       lastProgress = null;
       onScroll();
     };
@@ -285,12 +287,12 @@ export function ProductsFlythrough({ filter, setFilter }) {
     <div className="pf-stage" ref={stageRef}>
       {!reduceMotion && <div className="pf-white" ref={whiteRef} aria-hidden="true">
         <div className="pf-scene">
-          <div className="pf-section-tag">CAM 03 · PRODUCTS</div>
+          <div className="pf-section-tag"><span className="pf-tag-desktop">CAM 03 · PRODUCTS</span></div>
           <div className="pf-scatter-title" ref={scatterTitleRef}>
             <h2>Secure <em>Your</em><br /><span>World</span></h2>
             <p>PREMIUM CCTV SECURITY CAMERAS<br />FOR A SAFER TOMORROW</p>
           </div>
-          <div className="pf-corner pf-corner-top"><strong>4K</strong><span>ULTRA-CLEAR VIDEO,<br />DAY AND NIGHT</span></div>
+          <div className="pf-corner pf-corner-top"><strong>4K</strong><span><span className="pf-copy-desktop">ULTRA-CLEAR VIDEO,<br />DAY AND NIGHT</span><span className="pf-copy-mobile">ULTRA CLEAR VIDEO,<br />DAY AND NIGHT</span></span></div>
           <div className="pf-corner pf-corner-bottom-left"><strong>{String(count).padStart(2, '0')}</strong><span>CAMERAS</span></div>
           {visibleProducts.map((product, index) => {
             const spot = scatterSpots[index] ?? scatterSpots[scatterSpots.length - 1];
@@ -309,8 +311,8 @@ export function ProductsFlythrough({ filter, setFilter }) {
             </button>;
           })}
           <div className="pf-scatter-copy" ref={scatterCopyRef}>
-            <p>PROTECT YOUR HOME OR BUSINESS 24/7. WHETHER YOU NEED A DISCREET DOME OR A 360° VIEW.</p>
-            <ProductButton label="SHOP COLLECTION" onClick={() => scrollToFeature(0)} />
+            <p className="pf-copy-desktop">PROTECT YOUR HOME OR BUSINESS 24/7. WHETHER YOU NEED A DISCREET DOME OR A 360° VIEW.</p><p className="pf-copy-mobile">PROTECT YOUR HOME OR BUSINESS<br />24/7 WITH THE POWER OF<br />OUR ADVANCED CCTV SOLUTIONS.</p>
+            <ProductButton label="SHOP COLLECTION" mobileLabel="SHOP COLLECTION" onClick={() => scrollToFeature(0)} />
           </div>
           {visibleProducts.map((product, index) => <FeatureSlide
             key={product.id}
