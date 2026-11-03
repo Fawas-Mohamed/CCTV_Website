@@ -312,7 +312,7 @@ export function ProductsFlythrough({ filter, setFilter }) {
           })}
           <div className="pf-scatter-copy" ref={scatterCopyRef}>
             <p className="pf-copy-desktop">PROTECT YOUR HOME OR BUSINESS 24/7. WHETHER YOU NEED A DISCREET DOME OR A 360° VIEW.</p><p className="pf-copy-mobile">PROTECT YOUR HOME OR BUSINESS<br />24/7 WITH THE POWER OF<br />OUR ADVANCED CCTV SOLUTIONS.</p>
-            <ProductButton label="SHOP COLLECTION" mobileLabel="EXPLORE COLLECTION" onClick={() => scrollToFeature(0)} />
+            <ProductButton label="SHOP COLLECTION" mobileLabel="SHOP COLLECTION" onClick={() => scrollToFeature(0)} />
           </div>
           {visibleProducts.map((product, index) => <FeatureSlide
             key={product.id}

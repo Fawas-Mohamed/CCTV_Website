@@ -722,11 +722,12 @@ button:focus-visible,a:focus-visible,.reviews-stage:focus-visible,.review-portra
   .pf-corner-bottom-left{top:64%;bottom:auto;left:8%}
   .pf-corner-bottom-left strong{font-size:clamp(24px,6.5vw,30px)}
   .pf-corner-bottom-left>span{font-size:8px;letter-spacing:.16em}
-  .pf-scatter-copy{right:0;bottom:calc(5% + env(safe-area-inset-bottom));left:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:15px}
+  .pf-scatter-copy{right:0;bottom:calc(5% + env(safe-area-inset-bottom));left:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:12px}
   .pf-scatter-copy .pf-copy-desktop{display:none}
-  .pf-scatter-copy .pf-copy-mobile{display:block;width:min(84%,360px);margin:0;color:rgba(14,18,19,.68);font-size:10px;font-weight:500;letter-spacing:.15em;line-height:1.85;text-align:center}
-  .pf-scatter-copy .pf-pill-button{width:min(72vw,320px);min-height:60px;padding:0 10px 0 18px;justify-content:space-between;gap:8px;font-size:13px;letter-spacing:.13em}
+  .pf-scatter-copy .pf-copy-mobile{display:block;width:min(84%,360px);margin:0;color:rgba(14,18,19,.68);font-size:9px;font-weight:500;letter-spacing:.12em;line-height:1.7;text-align:center}
+  .pf-scatter-copy .pf-pill-button{position:relative;width:min(60vw,300px);min-height:54px;padding:0 50px;justify-content:center;gap:6px;font-size:11px;letter-spacing:.1.2em}
   .pf-scatter-copy .pf-button-label{display:none}
-  .pf-scatter-copy .pf-button-label-mobile{display:inline}
-  .pf-scatter-copy .pf-arrow-circle{width:52px;height:52px;background:transparent}
+  .pf-scatter-copy .pf-button-label-mobile{display:inline;white-space:nowrap}
+  .pf-scatter-copy .pf-arrow-circle{position:absolute;top:50%;right:4px;width:48px;height:44px;transform:translateY(-50%);background:transparent}
+  .pf-scatter-copy .pf-pill-button:hover .pf-arrow-circle{transform:translateY(-50%) translateX(3px)}
 }
