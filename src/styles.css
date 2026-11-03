@@ -731,3 +731,25 @@ button:focus-visible,a:focus-visible,.reviews-stage:focus-visible,.review-portra
   .pf-scatter-copy .pf-arrow-circle{position:absolute;top:50%;right:4px;width:48px;height:44px;transform:translateY(-50%);background:transparent}
   .pf-scatter-copy .pf-pill-button:hover .pf-arrow-circle{transform:translateY(-50%) translateX(3px)}
 }
+
+/* Mobile reviews layout matching the supplied portrait-and-quote reference. */
+@media(max-width:899px) and (orientation:portrait){
+  .reviews-section{height:max(calc(100svh - var(--header-h)),720px);min-height:720px;--D:min(48cqw,30cqh)}
+  .reviews-headline-mask{top:8cqh}
+  .reviews-section .reviews-headline{font-size:clamp(44px,16cqw,68px)}
+  .reviews-section .reviews-headline{animation:none!important;opacity:1!important;clip-path:none!important}
+  .review-orbit-item[data-slot="0"] .review-orbit-scale{--slot-y:30cqh}
+  .review-orbit-item[data-slot="-1"] .review-orbit-position{--slot-x:17cqw}
+  .review-orbit-item[data-slot="-1"] .review-orbit-scale{--slot-y:43cqh;--slot-scale:.32}
+  .review-orbit-item[data-slot="1"] .review-orbit-position{--slot-x:83cqw}
+  .review-orbit-item[data-slot="1"] .review-orbit-scale{--slot-y:43cqh;--slot-scale:.32}
+  .review-copy{top:50cqh;width:min(90cqw,440px);min-height:0;--comment-size:clamp(16px,4.2cqw,20px)}
+  .reviews-bottom-left{right:5cqw;bottom:8cqh;left:5cqw;max-width:none;gap:10px;justify-items:center;text-align:center}
+  .reviews-section .reviews-trust-copy strong{position:static;width:auto;font:700 10px/1.3 Inter,Arial,sans-serif;letter-spacing:.08em;text-align:center}
+  .reviews-section .reviews-trust-copy p{display:block;max-width:36ch;margin:6px auto 0;font:400 11px/1.4 Inter,Arial,sans-serif;text-align:center}
+  .reviews-controls{display:none}
+  .reviews-section .review-control{width:42px;height:42px}
+  .reviews-section .review-counter{margin-left:2px;font-size:12px}
+  .reviews-section .reviews-explore{right:auto;bottom:2cqh;left:50%;transform:translateX(-50%);padding:10px 14px;font-size:13px}
+  .reviews-section .reviews-explore:hover{transform:translateX(-50%)}
+}

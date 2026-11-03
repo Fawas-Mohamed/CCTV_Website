@@ -95,8 +95,8 @@ export function Footer() {
       <div><strong>SHOP</strong><a href="#categories">Home cameras</a><a href="#categories">Business systems</a><a href="#products">All cameras</a></div>
       <div><strong>SERVICES</strong><a href="#services">Site survey</a><a href="#services">Installation</a><a href="#services">Maintenance</a></div>
       <div><strong>SUPPORT</strong><a href="#reviews">Customer stories</a><a href="#home">Security tips</a><a href="#contact">Get in touch</a></div>
-      <div className="footer-contact"><span><Shield size={17} /> Your security, considered.</span><span>Camera systems · Installation · Support</span></div>
+      <div className="footer-contact"><span><Shield size={17} /> Your security, considered.</span><a href="tel:+94760041594">+94 76 004 1594</a><span>Camera systems · Installation · Support</span></div>
     </div>
-    <div className="footer-bottom"><a className="wordmark footer-wordmark" href="#home"><span className="brand-lens"><i /></span><span>SECUREVIEW</span></a><span>© 2026 SecureView CCTV Shop</span><span className="footer-rec"><i className="rec-dot" /> SYSTEM READY</span></div>
+    <div className="footer-bottom"><a className="wordmark footer-wordmark" href="#home"><span className="brand-lens"><i /></span><span>SECUREVIEW</span></a><span>© 2026 SecureView CCTV Shop</span><span className="footer-credit">Developed by: Neirah Tech</span><span className="footer-rec"><i className="rec-dot" /> SYSTEM READY</span></div>
   </footer>;
 }
