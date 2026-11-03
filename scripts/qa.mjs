@@ -161,7 +161,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
   const mode = width <= 820 && height > width ? 'm' : width <= 1280 ? 't' : 'd';
   await page.waitForFunction(
     (framePath) => performance.getEntriesByType('resource').some((entry) => entry.name.includes(framePath)),
-    `/frames/${mode}/frame_0001.webp`,
+    `/frames/${mode}/frame_0001.jpg`,
     { timeout: 30000 },
   );
   await page.evaluate(() => document.fonts.ready.then(() => true));
@@ -197,9 +197,9 @@ async function collectRun(browser, baseUrl, [width, height]) {
 
   const screenshotTargets = [
     { y: geometry.top, name: 'hero-0', frame: 1 },
-    { y: geometry.top + geometry.range * 0.3, name: 'hero-30', frame: Math.round(0.3 * 191) + 1 },
-    { y: geometry.top + geometry.range * 0.6, name: 'hero-60', frame: Math.round(0.6 * 191) + 1 },
-    { y: geometry.top + geometry.range, name: 'hero-100', frame: 192 },
+    { y: geometry.top + geometry.range * 0.3, name: 'hero-30', frame: Math.round(0.3 * 298) + 1 },
+    { y: geometry.top + geometry.range * 0.6, name: 'hero-60', frame: Math.round(0.6 * 298) + 1 },
+    { y: geometry.top + geometry.range, name: 'hero-100', frame: 299 },
   ];
   const sectionTargets = await page.evaluate((headerHeight) =>
     [...document.querySelectorAll('main > section, main > footer')].map((section, index) => {
@@ -235,7 +235,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
     for (const target of targets) {
       if (captured.has(target.name) || Math.abs(target.y - y) > 1) continue;
       if (target.kind === 'hero') {
-        const framePath = `/frames/${mode}/frame_${String(target.frame).padStart(4, '0')}.webp`;
+        const framePath = `/frames/${mode}/frame_${String(target.frame).padStart(4, '0')}.jpg`;
         try {
           await page.waitForFunction(
             ({ path, frame, set }) =>
@@ -257,7 +257,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
               drawnFrame: document.querySelector('canvas.hero-canvas')?.__drawnFrameIndex + 1,
               drawnSet: document.querySelector('canvas.hero-canvas')?.__drawnFrameSet,
               frames: performance.getEntriesByType('resource')
-              .filter((entry) => /\/frames\/[mtd]\/frame_\d+\.webp/.test(entry.name))
+              .filter((entry) => /\/frames\/[mtd]\/frame_\d+\.jpg/.test(entry.name))
               .slice(-8)
                 .map((entry) => entry.name.split('/').slice(-2).join('/')),
             };
@@ -298,7 +298,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
       await page.setViewportSize({ width: height, height: width });
       await wait(250);
       const rotatedProgress = await readHeroProgress();
-      const rotatedFrame = Math.round(rotatedProgress * 191) + 1;
+      const rotatedFrame = Math.round(rotatedProgress * 298) + 1;
       const rotatedWidth = height;
       const rotatedHeight = width;
       const rotatedMode = rotatedWidth <= 820 && rotatedHeight > rotatedWidth
@@ -310,7 +310,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
           && document.querySelector('canvas.hero-canvas')?.__drawnFrameIndex === frame - 1
           && document.querySelector('canvas.hero-canvas')?.__drawnFrameSet === set,
         {
-          path: `/frames/${rotatedMode}/frame_${String(rotatedFrame).padStart(4, '0')}.webp`,
+          path: `/frames/${rotatedMode}/frame_${String(rotatedFrame).padStart(4, '0')}.jpg`,
           frame: rotatedFrame,
           set: rotatedMode,
         },
@@ -319,14 +319,14 @@ async function collectRun(browser, baseUrl, [width, height]) {
       await page.setViewportSize({ width, height });
       await wait(250);
       const restoredProgress = await readHeroProgress();
-      const restoredFrame = Math.round(restoredProgress * 191) + 1;
+      const restoredFrame = Math.round(restoredProgress * 298) + 1;
       await page.waitForFunction(
         ({ path, frame, set }) =>
           performance.getEntriesByType('resource').some((entry) => entry.name.includes(path))
           && document.querySelector('canvas.hero-canvas')?.__drawnFrameIndex === frame - 1
           && document.querySelector('canvas.hero-canvas')?.__drawnFrameSet === set,
         {
-          path: `/frames/${mode}/frame_${String(restoredFrame).padStart(4, '0')}.webp`,
+          path: `/frames/${mode}/frame_${String(restoredFrame).padStart(4, '0')}.jpg`,
           frame: restoredFrame,
           set: mode,
         },
@@ -335,7 +335,7 @@ async function collectRun(browser, baseUrl, [width, height]) {
       rotationDelta = Math.max(
         Math.abs(rotatedProgress - beforeProgress),
         Math.abs(restoredProgress - beforeProgress),
-      ) * 191;
+      ) * 298;
       rotationChecked = true;
     }
   }
@@ -347,10 +347,10 @@ async function collectRun(browser, baseUrl, [width, height]) {
   await wait(100);
   const final = await page.evaluate(() => {
     const entries = performance.getEntriesByType('resource');
-    const frameEntries = entries.filter((entry) => /\/frames\/[mtd]\/frame_\d+\.webp/.test(entry.name));
+    const frameEntries = entries.filter((entry) => /\/frames\/[mtd]\/frame_\d+\.jpg/.test(entry.name));
     const heroFrameBytes = frameEntries.reduce((sum, entry) => sum + entry.transferSize, 0);
     const phoneFrameBytes = entries
-      .filter((entry) => /\/frames\/m\/frame_\d+\.webp/.test(entry.name))
+      .filter((entry) => /\/frames\/m\/frame_\d+\.jpg/.test(entry.name))
       .reduce((sum, entry) => sum + entry.transferSize, 0);
     return {
       lcp: window.__qaVitals.lcp,
