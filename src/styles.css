@@ -699,3 +699,34 @@ button:focus-visible,a:focus-visible,.reviews-stage:focus-visible,.review-portra
 @media(max-width:899px){
   .hero-features{width:100%;margin-left:0}
 }
+
+/* Mobile product showcase composition from the supplied reference. */
+.pf-button-label-mobile{display:none}
+.pf-tag-mobile,.pf-copy-mobile{display:none}
+@media(max-width:899px) and (orientation:portrait){
+  .pf-scene::before{content:"";position:absolute;z-index:0;top:5%;left:6%;width:88%;height:60%;border:1px solid rgba(226,232,242,.42);border-radius:50%;pointer-events:none}
+  .pf-section-tag{top:1.5%;left:5%;font-size:10px;letter-spacing:.08em}
+  .pf-tag-desktop{display:none}
+  .pf-tag-mobile{display:flex;align-items:center;gap:11px;color:#0E1213;font-size:11px;letter-spacing:.08em}
+  .pf-tag-mobile>span{color:rgba(14,18,19,.55)}
+  .pf-tag-mobile>b{font-size:15px;font-weight:600}
+  .pf-corner-top{top:3%;right:7%;display:grid}
+  .pf-corner-top strong{font-size:clamp(31px,8vw,38px)}
+  .pf-corner-top>span{font-size:8px;line-height:1.7;letter-spacing:.14em}
+  .pf-corner-top .pf-copy-desktop{display:none}
+  .pf-corner-top .pf-copy-mobile{display:block}
+  .pf-scatter-title{top:38%;width:94%;max-width:94%}
+  .pf-scatter-title h2,.pf-scatter-title h2 span{font-size:clamp(38px,10vw,48px);line-height:1;letter-spacing:-.045em}
+  .pf-scatter-title p{margin-top:13px;font-size:9px;letter-spacing:.16em;line-height:1.8}
+  .pf-scatter-button{width:clamp(52px,15vw,76px);height:clamp(52px,15vw,76px)}
+  .pf-corner-bottom-left{top:64%;bottom:auto;left:8%}
+  .pf-corner-bottom-left strong{font-size:clamp(32px,8.5vw,40px)}
+  .pf-corner-bottom-left>span{font-size:10px;letter-spacing:.18em}
+  .pf-scatter-copy{right:0;bottom:calc(5% + env(safe-area-inset-bottom));left:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:15px}
+  .pf-scatter-copy .pf-copy-desktop{display:none}
+  .pf-scatter-copy .pf-copy-mobile{display:block;width:min(84%,360px);margin:0;color:rgba(14,18,19,.68);font-size:10px;font-weight:500;letter-spacing:.15em;line-height:1.85;text-align:center}
+  .pf-scatter-copy .pf-pill-button{width:min(72vw,320px);min-height:60px;padding:0 10px 0 18px;justify-content:space-between;gap:8px;font-size:13px;letter-spacing:.13em}
+  .pf-scatter-copy .pf-button-label{display:none}
+  .pf-scatter-copy .pf-button-label-mobile{display:inline}
+  .pf-scatter-copy .pf-arrow-circle{width:52px;height:52px;background:transparent}
+}
